@@ -11,16 +11,52 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:background="#393939" >
-
-
+        <com.example.view.LeftMenu
+     	   	android:id="@+id/menu_left"
+        	android:layout_width="match_parent"
+        	android:layout_height="match_parent"
+        	android:layout_alignParentTop="true" >
+    	</com.example.view.LeftMenu>
     </RelativeLayout>
 
     <com.example.view.ListMenu
-        android:id="@+id/test2"
-        android:layout_width="200dip"
+        android:id="@+id/menu_center"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/relativeLayout1" >
+        android:layout_toRightOf="@+id/relativeLayout1"
+        android:layout_toLeftOf="@+id/relativeLayout2" >
     </com.example.view.ListMenu>
+    
+    <RelativeLayout
+        android:id="@+id/relativeLayout2"
+        android:layout_width="100dip"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:background="#b7b7b7" >
+		
+        <ListView
+            android:id="@+id/menu_right"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_above="@+id/sum"/>
+
+        <TextView
+            android:id="@+id/sum"
+            android:layout_width="match_parent"
+            android:layout_height="10dip"
+            android:textSize="10dip"
+            android:layout_above="@+id/submit"
+            android:text="100"/>
+        <Button
+            android:id="@+id/submit"
+            android:layout_width="match_parent"
+            android:layout_height="50dip"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:text="确定订单" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

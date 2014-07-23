@@ -1,6 +1,5 @@
 package com.example.view;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -9,6 +8,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.http.util.EncodingUtils;
 
@@ -32,7 +33,9 @@ public class ListMenu extends ListView
 	private List<Map<String, Object>> listItems;
 	private List<Bitmap> images;
 	private String res;
-	private String[] menus;
+	private List<String> menus;
+	private List<String> des;
+	private List<String> price;
 	private Context mContext;
 	private SimpleAdapter simpleAdapter;
 	
@@ -54,6 +57,9 @@ public class ListMenu extends ListView
 	{
 		listItems = new ArrayList<Map<String, Object>>();
 		images = new ArrayList<Bitmap>();
+		menus = new ArrayList<String>();
+		des = new ArrayList<String>();
+		price = new ArrayList<String>();
 		File f = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + AppBasicInfo.DIR + menu_name + ".txt");
 		try 
 		{
@@ -76,24 +82,49 @@ public class ListMenu extends ListView
 		
 		if(res != null)
 		{
-			menus = res.split(",");
-			for(int i = 0; i < menus.length; i++)
+			String type = "<type>(.*?)</type>";
+			Pattern p = Pattern.compile(type);
+			Matcher m = p.matcher(res);
+			while(m.find())
 			{
-				System.out.println("menus[i]" + menus[i]);
-				Bitmap img = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory().getAbsolutePath() + AppBasicInfo.DIR_IMG + menus[i] + ".jpg");
+				menus.add(m.group(1));
+			}
+			
+			String pri = "<price>(.*?)</price>";
+			p = Pattern.compile(pri);
+			m = p.matcher(res);
+			while(m.find())
+			{
+				price.add(m.group(1));
+			}
+			
+			String de = "<des>(.*?)</des>";
+			p = Pattern.compile(de);
+			m = p.matcher(res);
+			while(m.find())
+			{
+				des.add(m.group(1));
+			}
 
+			System.out.println("des.size()-->" + des.size());
+			System.out.println("price.size()-->" + price.size());
+			for(int i = 0; i < menus.size(); i++)
+			{
+				System.out.println("menus[i]" + menus.get(i));
+				Bitmap img = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory().getAbsolutePath() + AppBasicInfo.DIR_IMG + menus.get(i) + ".jpg");
 				images.add(img);
 			}
-			for(int j = 0; j < menus.length; j++)
+			for(int j = 0; j < menus.size(); j++)
 			{
 				Map<String, Object> listItem = new HashMap<String, Object>();
-				listItem.put("name", menus[j]);
-				System.out.println("menus[i]" + menus[j]);
+				listItem.put("name", menus.get(j));
+				System.out.println("menus[i]" + menus.get(j));
 				listItem.put("image", images.get(j));
-				listItem.put("info", "");
+				listItem.put("info", des.get(j));
+				listItem.put("price", price.get(j));
 				listItems.add(listItem);
 			}
-			simpleAdapter = new SimpleAdapter(mContext, listItems, R.layout.list, new String[] {"image" ,"name" ,"info"} , new int[]{R.id.hander, R.id.name ,R.id.info});
+			simpleAdapter = new SimpleAdapter(mContext, listItems, R.layout.list, new String[] {"image" ,"name" ,"info","price"} , new int[]{R.id.hander, R.id.name ,R.id.info,R.id.price});
 
 			simpleAdapter.setViewBinder(new ListViewBinder());
 
@@ -108,7 +139,6 @@ public class ListMenu extends ListView
 	
 	private class ListViewBinder implements ViewBinder
 	{
-
 		@Override
 		public boolean setViewValue(View view, Object data, String arg2) 
 		{
@@ -121,6 +151,15 @@ public class ListMenu extends ListView
 			}
 			return false;
 		}
-		
+	}
+	
+	public String getName(int id)
+	{
+		return menus.get(id);
+	}
+	
+	public String getPrice(int id)
+	{
+		return price.get(id);
 	}
 }

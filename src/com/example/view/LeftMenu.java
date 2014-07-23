@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.http.util.EncodingUtils;
 
@@ -27,7 +29,7 @@ public class LeftMenu extends ListView
 	private List<Map<String,Object>> listItems;
 	private String res;
 	private SimpleAdapter simpleAdapter;
-	private String[] menus;
+	private List<String> menus;
 	
 	public LeftMenu(Context context)
 	{
@@ -46,8 +48,9 @@ public class LeftMenu extends ListView
 	public void init()
 	{
 		listItems = new ArrayList<Map<String, Object>>();
+		menus = new ArrayList<String>();
 		
-		File f = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + AppBasicInfo.DIR + "菜单.txt");
+		File f = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + AppBasicInfo.DIR + "鑿滃崟.txt");
 		try 
 		{
 			FileInputStream fis = new FileInputStream(f);
@@ -69,12 +72,21 @@ public class LeftMenu extends ListView
 		
 		if(res != null)
 		{
-			menus = res.split(",");
-			for(int i =0; i < menus.length; i++)
+			String type = "<type>(.*?)</type>";
+			Pattern p=Pattern.compile(type);
+			Matcher m=p.matcher(res);
+			while(m.find())
 			{
-				System.out.println("menus[" + i + "]-->" + menus[i]);
+				menus.add(m.group(1));
+			}
+			System.out.println("menus[" + menus.size());
+			//menus = res.split(",");
+
+			for(int i =0; i < menus.size(); i++)
+			{
+				//System.out.println("menus[" + i + "]-->" + menus.get(i));
 				Map<String, Object> listItem = new HashMap<String, Object>();
-				listItem.put("name", menus[i]);
+				listItem.put("name", menus.get(i));
 				listItems.add(listItem);
 			}
 			simpleAdapter = new SimpleAdapter(mContext, listItems, R.layout.type_menu, new String[] {"name"} , new int[]{R.id.type_name});
@@ -82,19 +94,19 @@ public class LeftMenu extends ListView
 		}
 		else
 		{
-			Toast.makeText(mContext, "信息有误", Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext, "淇℃伅鏈夎", Toast.LENGTH_SHORT).show();
 		}
 	}
 	
 	public String getItem(int i)
 	{
-		if(i<0 && i > menus.length)
+		if(i<0 && i > menus.size())
 		{
 			return null;
 		}
 		else
 		{
-			return menus[i];
+			return menus.get(i);
 		}
 	}
 }
