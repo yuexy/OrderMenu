@@ -53,7 +53,7 @@ public class ListMenu extends ListView
 	public void init(String menu_name)
 	{
 		listItems = new ArrayList<Map<String, Object>>();
-		
+		images = new ArrayList<Bitmap>();
 		File f = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + AppBasicInfo.DIR + menu_name + ".txt");
 		try 
 		{
@@ -79,36 +79,26 @@ public class ListMenu extends ListView
 			menus = res.split(",");
 			for(int i = 0; i < menus.length; i++)
 			{
-				FileInputStream fs = null;
-				try {
-					fs = new FileInputStream(Environment.getExternalStorageDirectory().getAbsolutePath() + AppBasicInfo.DIR_IMG + menus[i] + ".jpg");
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				BufferedInputStream bs = new BufferedInputStream(fs);
-				Bitmap img = BitmapFactory.decodeStream(bs);
-				//Bitmap img = BitmapFactory.decodeFile();
+				System.out.println("menus[i]" + menus[i]);
+				Bitmap img = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory().getAbsolutePath() + AppBasicInfo.DIR_IMG + menus[i] + ".jpg");
+
 				images.add(img);
 			}
 			for(int j = 0; j < menus.length; j++)
 			{
 				Map<String, Object> listItem = new HashMap<String, Object>();
 				listItem.put("name", menus[j]);
+				System.out.println("menus[i]" + menus[j]);
 				listItem.put("image", images.get(j));
 				listItem.put("info", "");
 				listItems.add(listItem);
 			}
 			simpleAdapter = new SimpleAdapter(mContext, listItems, R.layout.list, new String[] {"image" ,"name" ,"info"} , new int[]{R.id.hander, R.id.name ,R.id.info});
+
 			simpleAdapter.setViewBinder(new ListViewBinder());
-			if(getAdapter() != null)
-			{
-				((SimpleAdapter)getAdapter()).notifyDataSetChanged();
-			}
-			else
-			{
-				setAdapter(simpleAdapter);
-			}
+
+			setAdapter(simpleAdapter);
+
 		}
 		else
 		{
