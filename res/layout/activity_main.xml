@@ -45,10 +45,10 @@
         <TextView
             android:id="@+id/sum"
             android:layout_width="match_parent"
-            android:layout_height="10dip"
+            android:layout_height="15dip"
             android:textSize="10dip"
             android:layout_above="@+id/submit"
-            android:text="100"/>
+            android:text="总价：0元"/>
         <Button
             android:id="@+id/submit"
             android:layout_width="match_parent"
